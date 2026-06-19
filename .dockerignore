@@ -1,0 +1,15 @@
+.env
+.git
+.gitignore
+.vscode
+data/
+mosquitto/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+*.mp3
+*.wav
