@@ -230,7 +230,7 @@ async def chat(request: ChatRequest):
             # Intercept [OPEN_APP: ] for Voice Commands
             import re
             import subprocess
-            from internal.python.tools import ALLOWED_COMMANDS
+            from tools import ALLOWED_COMMANDS
             match = re.search(r"\[OPEN_APP:\s*([^\]]+)\]", full_response, re.IGNORECASE)
             if match:
                 app_name = match.group(1).strip().lower()
