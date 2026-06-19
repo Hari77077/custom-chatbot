@@ -1,41 +1,59 @@
-# JARVIS Core Engine
+# JARVIS User Guide
 
-JARVIS is a highly autonomous, multi-modal artificial intelligence assistant running on a local hybrid architecture (Python and Go). It leverages Google's Gemini 2.5 Flash neural network for core reasoning, combined with a custom agentic interception layer for real-world interactions.
+Welcome to JARVIS! This is your autonomous, multi-modal personal AI assistant. JARVIS is designed to help you with everyday tasks using voice, text, and images.
 
-## Key Capabilities
+---
 
-### 1. Multi-Modal Interface
-JARVIS supports text, voice, and image inputs. The frontend implements a Walkie-Talkie interface featuring Voice Activity Detection (VAD). When recording audio, the system monitors microphone volume; after precisely 3 seconds of silence, the engine automatically terminates the recording and dispatches the raw audio byte stream directly to the neural network for near-instantaneous multimodal processing.
+## 🎙️ How to Use the Voice Walkie-Talkie
 
-### 2. Native Search Grounding
-Instead of relying on rigid, keyword-based web scraping scripts, JARVIS natively integrates with Google Search APIs. When asked for real-time information, the model autonomously queries live internet data to ground its responses, working seamlessly across both text and voice interactions.
+You can talk to JARVIS hands-free without ever touching your keyboard!
+1. Make sure your dashboard is open.
+2. Say the wake word: **"JARVIS"** out loud. The microphone icon will light up red.
+3. Speak your question or command naturally.
+4. **Hands-free sending:** Stop talking for exactly 3 seconds. JARVIS will detect the silence and automatically reply!
+5. **Interrupting:** If JARVIS is talking too much, just say **"Stop"**, **"Sleep"**, or **"Shutdown"** to instantly cut him off.
 
-### 3. Agentic Operating System Control
-A Python-based interception layer acts as an active intermediary before inputs reach the LLM. It parses natural language to execute authorized system-level commands, such as launching designated applications (e.g., calculator, web browsers, or text editors), drafting emails via native clients, and generating standard calendar (.ics) invites.
+---
 
-### 4. Local Document Intelligence (RAG)
-Users can upload text, markdown, or PDF documents directly into the interface. These documents are instantly vectorized and stored in a persistent local database (ChromaDB). This Retrieval-Augmented Generation (RAG) pipeline allows JARVIS to reference vast quantities of local context that exceed standard token windows.
+## 🌐 Live Google Search
 
-### 5. Persistent Long-Term Memory
-Beyond standard conversation history, JARVIS utilizes a partitioned ChromaDB implementation for permanent fact storage. Users can explicitly command the assistant to memorize specific facts, which are injected into a dedicated `jarvis_core_facts` vector space. These facts are retrieved and injected into the system prompt across all future sessions.
+JARVIS is connected directly to the live internet. You don't need to use any special commands!
+* Ask him: *"What is the exact temperature in Kochi right now?"*
+* Ask him: *"What is the current price of Bitcoin?"*
+He will autonomously search Google in the background and give you the latest data.
 
-## Architecture
+---
 
-*   **Frontend**: Vanilla HTML/JS/CSS featuring Web MediaRecorder APIs and Web Speech Recognition for wake-word activation.
-*   **AI Backend (Python)**: A FastAPI server handling asynchronous chunked generation, context window management, and Python-level tool interception.
-*   **IoT/Core Backend (Go)**: A lightweight Golang server utilizing Eclipse Mosquitto (MQTT) for background system telemetry and external sensor integration.
-*   **Database**: Persistent ChromaDB (`/data/chroma_db`) for vector embeddings, and JSON datastores (`/data/conversations`) for conversation state logging.
+## 🖥️ Controlling Your Computer
 
-## Setup & Execution
+You can ask JARVIS to open applications on your local machine.
+* **Try saying:** *"JARVIS, can you open the calculator?"*
+* **Or type:** *"open notepad"*
+*(Note: For security, he can only open whitelisted apps like `calc`, `notepad`, `chrome`, and `cmd`.)*
 
-A `Makefile` is provided for standard execution environments.
+---
 
-1.  **Environment Setup**: Copy `.env.example` to `.env` and provide a valid `GEMINI_API_KEY`.
-2.  **Dependencies**: Run `make setup` to install Python packages and Go modules.
-3.  **Execution**: 
-    *   Run `make run-python` to boot the AI backend.
-    *   Run `make run-go` to boot the background MQTT engine.
+## 🧠 Permanent Memory
 
-## Security Notice
+JARVIS has a persistent long-term memory database. If you tell him something important, he will remember it forever across all future conversations.
+* **Command him:** *"JARVIS, remember that my favorite color is dark blue."*
+* **Command him:** *"Memorize this: the Wi-Fi password is 'Hackathon2026'."*
 
-The agentic system control layer runs shell commands. Only authorized commands explicitly defined in the `ALLOWED_COMMANDS` whitelist within `tools.py` will be permitted execution.
+---
+
+## 📚 Reading Your Documents (RAG)
+
+JARVIS can read massive PDFs, text files, or Markdown documents locally without uploading them to the cloud.
+1. Click the **Paperclip** icon in the chat bar.
+2. Select your document (e.g., a PDF report).
+3. Ask him: *"Based on the document I just uploaded, what is the main conclusion?"*
+
+---
+
+## Setup & Running the Server
+
+If you are a developer looking to boot the server locally:
+1. Copy `.env.example` to `.env` and insert your `GEMINI_API_KEY`.
+2. Run `make setup` to install dependencies.
+3. Run `make run-python` to start the AI server.
+4. Open your browser to `http://localhost:8000`.
