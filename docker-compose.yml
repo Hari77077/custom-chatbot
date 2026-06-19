@@ -1,0 +1,13 @@
+services:
+  # Ultra-Lightweight IoT Ingestion Broker (For Dashboard Telemetry Only)
+  mqtt:
+    image: eclipse-mosquitto:latest
+    container_name: jarvis_mqtt
+    ports:
+      - "1883:1883"  # Standard MQTT protocol channel
+      - "9001:9001"  # MQTT over WebSockets for UI
+    volumes:
+      - ./mosquitto/config:/mosquitto/config
+      - ./mosquitto/data:/mosquitto/data
+      - ./mosquitto/log:/mosquitto/log
+    restart: unless-stopped

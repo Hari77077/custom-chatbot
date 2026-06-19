@@ -1,0 +1,12 @@
+google-genai[aiohttp]
+fastapi
+uvicorn[standard]
+python-dotenv
+numpy
+paho-mqtt
+chromadb
+edge-tts
+PyPDF2
+duckduckgo-search
+beautifulsoup4
+requests
