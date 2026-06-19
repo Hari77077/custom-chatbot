@@ -65,6 +65,8 @@ Guidelines:
 - Structure complex answers with headers, lists, and clear explanations
 - If you receive audio input, listen carefully and respond naturally
 - When you have relevant context from the knowledge base, use it to enhance your answers
+- IMPORTANT: You have native Google Search capabilities enabled. YOU MUST autonomously use Google Search to fetch live information whenever the user asks for real-time data, current events, weather, or the current date and time! NEVER say you don't have access to real-time data.
+- If the user asks you to open a computer application (like calculator, notepad, chrome, cmd), you MUST include the exact string `[OPEN_APP: app_name]` anywhere in your response. For example: `[OPEN_APP: calc]`. I will intercept this tag and open it for them.
 {rag_context}"""
 
 
@@ -205,6 +207,7 @@ async def chat(request: ChatRequest):
                     system_instruction=system_instruction,
                     temperature=0.7,
                     max_output_tokens=8192,
+                    tools=[{"google_search": {}}]
                 )
             )
             async for chunk in response:
@@ -223,6 +226,20 @@ async def chat(request: ChatRequest):
         # Save assistant response
         if full_response:
             conv_store.add_message(request.conversation_id, "assistant", full_response)
+            
+            # Intercept [OPEN_APP: ] for Voice Commands
+            import re
+            import subprocess
+            from internal.python.tools import ALLOWED_COMMANDS
+            match = re.search(r"\[OPEN_APP:\s*([^\]]+)\]", full_response, re.IGNORECASE)
+            if match:
+                app_name = match.group(1).strip().lower()
+                if app_name == "calculator": app_name = "calc"
+                if app_name in ALLOWED_COMMANDS:
+                    try:
+                        subprocess.Popen(app_name, shell=True)
+                    except Exception as e:
+                        print(f"Failed to open app {app_name}: {e}")
         yield f"data: {json.dumps({'done': True})}\n\n"
 
     return StreamingResponse(generate_stream(), media_type="text/event-stream")
